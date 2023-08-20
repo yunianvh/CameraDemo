@@ -6,20 +6,20 @@ import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
 import android.os.Bundle
 import android.view.Surface
-import android.view.TextureView
+import android.view.SurfaceHolder
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
-import com.yunianvh.camera1.databinding.ActivityTextureViewBinding
+import com.yunianvh.camera1.databinding.ActivitySurfaceViewBinding
 
-class SurfaceTextureActivity : AppCompatActivity() , TextureView.SurfaceTextureListener{
+class SurfaceViewActivity : AppCompatActivity() , SurfaceHolder.Callback {
     private val permissionArray = arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
-    private var binding: ActivityTextureViewBinding? = null
+    private var binding: ActivitySurfaceViewBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityTextureViewBinding.inflate(layoutInflater)
+        binding = ActivitySurfaceViewBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
         XXPermissions.with(this)
@@ -30,7 +30,7 @@ class SurfaceTextureActivity : AppCompatActivity() , TextureView.SurfaceTextureL
                         Toast.makeText(applicationContext, "请务必开启所有权限", Toast.LENGTH_LONG).show()
                         return
                     }
-                    binding!!.cameraTextureView.surfaceTextureListener = this@SurfaceTextureActivity
+                    binding!!.cameraSurfaceView.holder.addCallback(this@SurfaceViewActivity)
                 }
 
                 override fun onDenied(permissions: List<String>, doNotAskAgain: Boolean) {
@@ -75,8 +75,7 @@ class SurfaceTextureActivity : AppCompatActivity() , TextureView.SurfaceTextureL
             //寻转角度
             mCamera?.setDisplayOrientation(getDisplayOrientation())
 
-            // 使用SurfaceTexture来承载相机的预览，而不需要设置一个可见的View
-            mCamera?.setPreviewTexture(binding?.cameraTextureView?.surfaceTexture)
+            mCamera?.setPreviewDisplay(binding?.cameraSurfaceView?.holder)
             // 启动相机预览
             mCamera?.startPreview()
         } catch (e: Exception) {
@@ -121,18 +120,14 @@ class SurfaceTextureActivity : AppCompatActivity() , TextureView.SurfaceTextureL
         return result
     }
 
-    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+    override fun surfaceCreated(holder: SurfaceHolder) {
         initCamera()
     }
 
-    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
     }
 
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
         releaseCamera()
-        return true
-    }
-
-    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
     }
 }

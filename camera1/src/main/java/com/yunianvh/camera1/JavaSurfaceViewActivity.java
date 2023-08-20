@@ -2,24 +2,39 @@ package com.yunianvh.camera1;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.TextureView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.XXPermissions;
+import com.yunianvh.camera1.databinding.ActivitySurfaceViewBinding;
+import com.yunianvh.camera1.databinding.ActivityTextureViewBinding;
 
 import java.util.List;
 
-public class SurfaceTextureActivityJava extends Activity {
+public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.Callback {
+    private static final String TAG = JavaSurfaceViewActivity.class.getSimpleName();
     private String[] permissionArray = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+    private ActivitySurfaceViewBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivitySurfaceViewBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         XXPermissions.with(this)
                 .permission(permissionArray)
                 .request(new OnPermissionCallback() {
@@ -27,10 +42,10 @@ public class SurfaceTextureActivityJava extends Activity {
                     @Override
                     public void onGranted(List<String> permissions, boolean allGranted) {
                         if (!allGranted) {
-                            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "请务必开启所有权限", Toast.LENGTH_LONG).show();
                             return;
                         }
-                        initCamera();
+                        binding.cameraSurfaceView.getHolder().addCallback(JavaSurfaceViewActivity.this);
                     }
 
                     @Override
@@ -74,22 +89,79 @@ public class SurfaceTextureActivityJava extends Activity {
             // 将参数应用到相机
             mCamera.setParameters(parameters);
 
-            // 这里使用surfaceTexture来承载相机的预览，而不需要设置一个可见的view
-            mCamera.setPreviewTexture(new SurfaceTexture(0));
+            //寻转角度
+            mCamera.setDisplayOrientation(getDisplayOrientation());
+
+            mCamera.setPreviewDisplay(binding.cameraSurfaceView.getHolder());
             // 启动相机预览
             mCamera.startPreview();
+            Log.e(TAG, "initCamera: 启动相机预览");
         } catch (Exception e) {
             // 处理相机初始化异常
             e.printStackTrace();
+            Log.e(TAG, "initCamera Exception: " + e);
         }
     }
 
     // 停止相机预览并释放相机资源
     private void releaseCamera() {
+        Log.e(TAG, "releaseCamera: 停止相机预览并释放相机资源");
         if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
         }
+    }
+
+    /**
+     * 自适应相机角度
+     *
+     * @return
+     */
+    private int getDisplayOrientation() {
+        WindowManager windowManager = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        int rotation = display.getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, cameraInfo);
+        int result;
+        if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (cameraInfo.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {
+            result = (cameraInfo.orientation - degrees + 360) % 360;
+        }
+        return result;
+    }
+
+
+    @Override
+    public void surfaceCreated(@NonNull SurfaceHolder holder) {
+        initCamera();
+    }
+
+    @Override
+    public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+        releaseCamera();
     }
 }
