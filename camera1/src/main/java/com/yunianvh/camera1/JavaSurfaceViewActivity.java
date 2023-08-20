@@ -5,12 +5,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -22,11 +24,16 @@ import com.hjq.permissions.XXPermissions;
 import com.yunianvh.camera1.databinding.ActivitySurfaceViewBinding;
 import com.yunianvh.camera1.databinding.ActivityTextureViewBinding;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.Callback {
     private static final String TAG = JavaSurfaceViewActivity.class.getSimpleName();
-    private String[] permissionArray = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+    private String[] permissionArray = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private ActivitySurfaceViewBinding binding;
 
     @Override
@@ -34,6 +41,14 @@ public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.C
         super.onCreate(savedInstanceState);
         binding = ActivitySurfaceViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        //拍照
+        File path = new File(this.getExternalFilesDir(null).getAbsolutePath() + "/img/");
+        if (!path.exists()) path.mkdirs();
+        binding.takePictureBtn.setOnClickListener(v -> {
+            pictureFile = new File(path, s2.format(new Date()) + ".jpg");
+            takePicture();
+        });
 
         XXPermissions.with(this)
                 .permission(permissionArray)
@@ -147,6 +162,33 @@ public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.C
             result = (cameraInfo.orientation - degrees + 360) % 360;
         }
         return result;
+    }
+
+    //拍照
+    private SimpleDateFormat s2 = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    private File pictureFile = null;
+    private void takePicture() {
+        mCamera.takePicture(null, null, (data, camera) -> {
+            // 将照片数据保存为JPG文件
+            if (pictureFile == null) {
+                Log.d(TAG, "Error creating media file, check storage permissions");
+                return;
+            }
+
+            try {
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                fos.write(data);
+                fos.close();
+                Log.d(TAG, "Picture saved: " + pictureFile.getAbsolutePath());
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "File not found: " + e.getMessage());
+            } catch (IOException e) {
+                Log.d(TAG, "Error accessing file: " + e.getMessage());
+            }
+
+            // 重新启动预览
+            mCamera.startPreview();
+        });
     }
 
 
