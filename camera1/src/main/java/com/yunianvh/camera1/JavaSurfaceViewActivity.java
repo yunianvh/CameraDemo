@@ -86,6 +86,7 @@ public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.C
     private Camera mCamera;
     private int width = 1920;
     private int height = 1080;
+    private byte[] yuvBuffer;
 
     // 初始化相机方法，注意要想让代码跑起来，要钱申请Camera权限
     private void initCamera() {
@@ -108,6 +109,14 @@ public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.C
             mCamera.setDisplayOrientation(getDisplayOrientation());
 
             mCamera.setPreviewDisplay(binding.cameraSurfaceView.getHolder());
+
+            //设置帧回调1，需要对帧缓冲区进行消费后设置camera.addCallbackBuffer(yuvBuffer);再返回新一帧数据
+            yuvBuffer = new byte[width * height * 3 / 2];
+            mCamera.addCallbackBuffer(yuvBuffer);
+            mCamera.setPreviewCallbackWithBuffer(previewCallback);
+            //设置帧回调2，直接传递预览帧数据给回调函数
+            //mCamera.setPreviewCallback(previewCallback);
+
             // 启动相机预览
             mCamera.startPreview();
             Log.e(TAG, "initCamera: 启动相机预览");
@@ -167,6 +176,7 @@ public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.C
     //拍照
     private SimpleDateFormat s2 = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
     private File pictureFile = null;
+
     private void takePicture() {
         mCamera.takePicture(null, null, (data, camera) -> {
             // 将照片数据保存为JPG文件
@@ -191,6 +201,15 @@ public class JavaSurfaceViewActivity extends Activity implements SurfaceHolder.C
         });
     }
 
+    //帧回调
+    Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
+        @Override
+        public void onPreviewFrame(byte[] data, Camera camera) {
+            //在这里对数据进行处理
+            //帧缓冲区模式这个别忘记了
+            camera.addCallbackBuffer(yuvBuffer);
+        }
+    };
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
