@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "CameraDome"
 include ':app'
 include ':camera1'
+include ':camera2'
