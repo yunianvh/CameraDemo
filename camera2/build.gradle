@@ -45,5 +45,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     //第三方权限框架，自己GitHub上看具体使用
     implementation 'com.github.getActivity:XXPermissions:18.0'
-
 }

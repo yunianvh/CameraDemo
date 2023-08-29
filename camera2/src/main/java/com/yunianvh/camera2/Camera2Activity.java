@@ -1,10 +1,10 @@
 package com.yunianvh.camera2;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -25,7 +25,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
 import com.hjq.permissions.XXPermissions;
 import com.yunianvh.camera2.databinding.Camera2ActivityBinding;
@@ -66,14 +65,11 @@ public class Camera2Activity extends Activity {
 
     }
 
+    @SuppressLint("MissingPermission")
     private void initCamera2() {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             String[] cameraIdList = cameraManager.getCameraIdList();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(Camera2Activity.this, "请先申请权限", Toast.LENGTH_SHORT).show();
-                return;
-            }
             cameraManager.openCamera(cameraIdList[1], new CameraDevice.StateCallback() {
                 @Override
                 public void onOpened(@NonNull CameraDevice cameraDevice) {

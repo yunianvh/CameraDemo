@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.yunianvh.camera2">
 
     <application
@@ -13,6 +14,11 @@
         <meta-data android:name="ScopedStorage" android:value="true" />
         <activity
             android:name=".Camera2Activity"
+            android:exported="true">
+
+        </activity>
+        <activity android:name=".Camera2ActivityKt"
+            tools:ignore="DuplicateActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
