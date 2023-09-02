@@ -11,10 +11,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/camera1" />
             <option value="$PROJECT_DIR$/camera2" />
             <option value="$PROJECT_DIR$/camerax" />
+            <option value="$PROJECT_DIR$/uvccamera" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

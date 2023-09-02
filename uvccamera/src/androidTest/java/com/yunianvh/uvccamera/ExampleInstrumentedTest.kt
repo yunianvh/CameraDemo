@@ -1,4 +1,4 @@
-package com.yunianvh.cameradome
+package com.yunianvh.uvccamera
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

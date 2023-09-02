@@ -12,10 +12,13 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        flatDir {
+            dirs 'libs', '../uvccamera/libs'
+        }
     }
 }
 rootProject.name = "CameraDome"
-include ':app'
+include ':uvccamera'
 include ':camera1'
 include ':camera2'
 include ':camerax'

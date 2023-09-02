@@ -1,4 +1,4 @@
-package com.yunianvh.cameradome
+package com.yunianvh.uvccamera
 
 import org.junit.Test
 

@@ -3,45 +3,28 @@ Android Camere开发入门专栏，记录Camera开发相关内容，包含Camera
 
 ## Android Camere开发入门（1）：Camera1的使用
 
-### 目标
+[Camera文章链接](https://blog.csdn.net/qq_35350654/article/details/132389732?spm=1001.2014.3001.5501)
 
-了解并理解Camera1的基本概念和工作原理
-掌握Camera1的初始化、参数配置、相机预览、拍摄照片、帧回调设置以及视频录制的方法
+## Android Camere开发入门（2）：Camera2的使用
 
-### 内容分配
+[Camera2文章链接](https://blog.csdn.net/qq_35350654/article/details/132484325?spm=1001.2014.3001.5501)
 
-#### 一、Camera1基础知识 
-1. Camera1简介
-- 介绍Camera1的基本功能和特性
-- 介绍Camera1的应用场景和限制
-2. 这里是列表文本Camera1的生命周期
-- 介绍Camera1的生命周期，包括创建、初始化、关闭等过程
-3. Camera1的API接口
-- 介绍Camera1的主要API接口，如setPreviewCallback、setPictureCallback等
-4. Camera1的工作原理
-- 简单介绍Camera1的工作原理，包括预览流程、拍照流程等
+## Android Camera开发入门（3）：CameraX的使用
 
-#### 二、Camera1的使用
-1. 相机初始化
-- 讲解如何创建Camera对象，包括设置预览、拍照等功能
-- 演示如何进行相机初始化，包括设置预览大小、方向、格式等参数
-2. 参数配置说明
-- 详细讲解各个参数的含义和作用，如预览尺寸、对焦模式、曝光补偿等
-- 演示如何根据实际需求调整这些参数，以获得最佳的拍照效果
-3. 相机预览
-- 演示如何使用setPreviewCallback方法设置帧回调，实时显示相机预览画面
-- 讲解如何处理预览过程中可能出现的问题，如预览失败、预览卡顿等
-4. 拍摄照片
-- 演示如何使用takePicture方法进行拍照，包括选择照片格式、质量、存储位置等
-- 讲解如何根据实际需求选择合适的照片格式和质量，以获得最佳的拍照效果
-5. 帧回调设置
-- 讲解如何使用setPreviewCallback方法和setPictureCallback方法进行帧回调设置，实现拍照前后的操作，如预览画面切换、照片保存等
-6. 视频录制
-- 讲解如何使用MediaRecorder类进行视频录制，包括设置录制格式、质量、存储位置等
-- 演示如何根据实际需求选择合适的视频格式和质量，以获得最佳的视频效果
-7. 实战演练
-- 自己尝试使用以上知识进行实践操作，老师提供指导和帮助
-- 通过实际操作，加深对Camera1的理解和应用能力
+[CameraX文章链接](https://blog.csdn.net/qq_35350654/article/details/132531847?spm=1001.2014.3001.5501)
 
-### 资源与环境
-- 设备：带有摄像头的Android手机或模拟器。用于展示和演示Camera1的使用效果。
+## Android Camera开发入门（4）：USB/UVC Camera的使用
+
+[USB/UVC Camera文章链接](USB/UVC Camera文章链接)
+
+
+
+## 代码已同步GitHub
+
+https://github.com/yunianvh/CameraDemo
+
+## 欢迎一起维护和交流
+
+QQ：1412378121
+
+微信：W1412378121
