@@ -15,7 +15,7 @@ Android Camere开发入门专栏，记录Camera开发相关内容，包含Camera
 
 ## Android Camera开发入门（4）：USB/UVC Camera的使用
 
-[USB/UVC Camera文章链接](USB/UVC Camera文章链接)
+[USB/UVC Camera文章链接](https://blog.csdn.net/qq_35350654/article/details/132593725?spm=1001.2014.3001.5501)
 
 
 
